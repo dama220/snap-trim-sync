@@ -140,7 +140,7 @@ function BookingsToday() {
                   </div>
                 </div>
                 <Select defaultValue={b.status} onValueChange={async (v) => {
-                  await supabase.from("bookings").update({ status: v }).eq("id", b.id);
+                  await supabase.from("bookings").update({ status: v as any }).eq("id", b.id);
                   reload();
                 }}>
                   <SelectTrigger className="w-36 h-9 rounded-xl"><SelectValue /></SelectTrigger>
