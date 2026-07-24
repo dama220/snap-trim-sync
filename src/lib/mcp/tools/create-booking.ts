@@ -29,7 +29,7 @@ export default defineTool({
         customer_phone: input.customer_phone,
         start_time: input.start_time,
         end_time: input.end_time,
-        source: "walkin",
+        source: "offline",
         status: "confirmed",
       })
       .select()
