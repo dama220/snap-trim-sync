@@ -9,9 +9,8 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/signup")({
   head: () => ({ meta: [{ title: "List your salon — SnipShop" }, { name: "description", content: "Create your salon owner account on SnipShop." }] }),
-  validateSearch: (s: Record<string, unknown>) => ({
-    next: typeof s.next === "string" ? s.next : undefined,
-  }),
+  validateSearch: (s: Record<string, unknown>): { next?: string } =>
+    typeof s.next === "string" ? { next: s.next } : {},
   component: SignupPage,
 });
 
