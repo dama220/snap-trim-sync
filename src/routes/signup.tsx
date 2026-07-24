@@ -9,11 +9,18 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/signup")({
   head: () => ({ meta: [{ title: "List your salon — SnipShop" }, { name: "description", content: "Create your salon owner account on SnipShop." }] }),
+  validateSearch: (s: Record<string, unknown>): { next?: string } =>
+    typeof s.next === "string" ? { next: s.next } : {},
   component: SignupPage,
 });
 
+function isSafeNext(next: string | undefined): next is string {
+  return !!next && next.startsWith("/") && !next.startsWith("//");
+}
+
 function SignupPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,18 +30,23 @@ function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    const returnPath = isSafeNext(next) ? next : "/dashboard";
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: window.location.origin + "/dashboard",
+        emailRedirectTo: window.location.origin + returnPath,
         data: { full_name: fullName, phone },
       },
     });
     setLoading(false);
     if (error) return toast.error(error.message);
     toast.success("Account created! Setting things up...");
-    navigate({ to: "/dashboard" });
+    if (isSafeNext(next)) {
+      window.location.href = next;
+    } else {
+      navigate({ to: "/dashboard" });
+    }
   };
 
   return (

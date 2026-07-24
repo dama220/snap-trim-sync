@@ -9,11 +9,18 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Log in — SnipShop" }, { name: "description", content: "Salon owners log in to manage bookings." }] }),
+  validateSearch: (s: Record<string, unknown>): { next?: string } =>
+    typeof s.next === "string" ? { next: s.next } : {},
   component: LoginPage,
 });
 
+function isSafeNext(next: string | undefined): next is string {
+  return !!next && next.startsWith("/") && !next.startsWith("//");
+}
+
 function LoginPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,7 +32,11 @@ function LoginPage() {
     setLoading(false);
     if (error) return toast.error(error.message);
     toast.success("Welcome back!");
-    navigate({ to: "/dashboard" });
+    if (isSafeNext(next)) {
+      window.location.href = next;
+    } else {
+      navigate({ to: "/dashboard" });
+    }
   };
 
   return (
@@ -53,7 +64,7 @@ function LoginPage() {
           </Button>
         </form>
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          New here? <Link to="/signup" className="text-primary font-semibold hover:underline">Create an account</Link>
+          New here? <Link to="/signup" search={isSafeNext(next) ? { next } : undefined} className="text-primary font-semibold hover:underline">Create an account</Link>
         </p>
       </div>
     </div>
