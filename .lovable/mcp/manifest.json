@@ -1,0 +1,180 @@
+{
+  "version": 1,
+  "sdk_version": "0.24.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://wvdiqjguyvtngoeztldx.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "snipshop-mcp",
+      "version": "0.1.0",
+      "title": "SnipShop MCP"
+    },
+    "tools": [
+      {
+        "name": "list_my_salons",
+        "title": "List my salons",
+        "description": "List all salons owned by the signed-in user, with id, name, slug, city, and opening hours.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_services",
+        "title": "List services",
+        "description": "List services for one of the signed-in user's salons.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "salon_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Salon UUID (from list_my_salons)."
+            }
+          },
+          "required": [
+            "salon_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_barbers",
+        "title": "List barbers",
+        "description": "List barbers for one of the signed-in user's salons.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "salon_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Salon UUID (from list_my_salons)."
+            }
+          },
+          "required": [
+            "salon_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_bookings",
+        "title": "List bookings",
+        "description": "List bookings for one of the signed-in user's salons. Optionally filter by ISO 8601 start/end range.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "salon_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Salon UUID (from list_my_salons)."
+            },
+            "from": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Inclusive lower bound on start_time (ISO 8601)."
+            },
+            "to": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Exclusive upper bound on start_time (ISO 8601)."
+            }
+          },
+          "required": [
+            "salon_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_booking",
+        "title": "Create walk-in booking",
+        "description": "Create a booking (walk-in / offline) for one of the signed-in user's salons. Times are ISO 8601.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "salon_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "barber_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "service_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "customer_name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "customer_phone": {
+              "type": "string",
+              "maxLength": 50
+            },
+            "start_time": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "end_time": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "salon_id",
+            "barber_id",
+            "service_id",
+            "customer_name",
+            "start_time",
+            "end_time"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
