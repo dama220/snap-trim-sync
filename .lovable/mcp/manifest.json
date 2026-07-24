@@ -167,6 +167,7 @@
             "barber_id",
             "service_id",
             "customer_name",
+            "customer_phone",
             "start_time",
             "end_time"
           ],
