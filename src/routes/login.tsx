@@ -65,7 +65,7 @@ function LoginPage() {
           </Button>
         </form>
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          New here? <Link to="/signup" className="text-primary font-semibold hover:underline">Create an account</Link>
+          New here? <Link to="/signup" search={isSafeNext(next) ? { next } : undefined} className="text-primary font-semibold hover:underline">Create an account</Link>
         </p>
       </div>
     </div>
